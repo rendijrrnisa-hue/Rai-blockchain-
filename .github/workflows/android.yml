@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -32,7 +33,10 @@ jobs:
           cordova create rai com.rai.blockchain RAI
           cd rai
           cordova platform add android
-          cp -r ../* www/
+          cp -r ../index.html www/
+          cp -r ../style.css www/ || true
+          cp -r ../app.js www/ || true
+          cp -r ../blockchain.js www/ || true
 
       - name: Build APK
         run: |
