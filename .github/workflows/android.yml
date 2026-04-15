@@ -1,0 +1,46 @@
+name: Build RAI Android
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Cordova
+        run: npm install -g cordova
+
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Create Cordova App
+        run: |
+          cordova create rai com.rai.blockchain RAI
+          cd rai
+          cordova platform add android
+          cp -r ../* www/
+
+      - name: Build APK
+        run: |
+          cd rai
+          cordova build android
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: rai-apk
+          path: rai/platforms/android/app/build/outputs/apk/debug/app-debug.apk
